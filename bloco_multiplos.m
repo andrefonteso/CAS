@@ -58,10 +58,9 @@ ag5 = asin((RZ+TZ)/eco5);
 
 if((RZ==TZ) && (RX==TX))
     eco6 = (RY+TY);
-    eco7 = sqr t(((2*CY-RY)-TY)^2);
+    eco7 = sqrt(((2*CY-RY)-TY)^2);
 else
     eco6 = 0;
-
     eco7 = 0;
 end
 
