@@ -45,6 +45,8 @@ static void finalize_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   *chartInstance);
 static void sf_gateway_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   *chartInstance);
+static void c4_chartstep_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
+  *chartInstance);
 static void initSimStructsc4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   *chartInstance);
 static void init_script_number_translation(uint32_T c4_machineNumber, uint32_T
@@ -232,6 +234,58 @@ static void finalize_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
 static void sf_gateway_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   *chartInstance)
 {
+  int32_T c4_i0;
+  real_T *c4_k;
+  real_T *c4_sinal_atrasado1;
+  real_T *c4_sinal_atrasado2;
+  real_T *c4_sinal_atrasado3;
+  real_T *c4_sinal_atrasado4;
+  real_T *c4_sinal_atrasado5;
+  real_T *c4_sinal_espalhado1;
+  real_T *c4_sinal_espalhado2;
+  real_T *c4_sinal_espalhado3;
+  real_T *c4_sinal_espalhado4;
+  real_T *c4_sinal_espalhado5;
+  real_T (*c4_caminhos)[5];
+  c4_caminhos = (real_T (*)[5])ssGetInputPortSignal(chartInstance->S, 6);
+  c4_sinal_espalhado5 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 5);
+  c4_sinal_espalhado4 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 4);
+  c4_sinal_espalhado3 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 3);
+  c4_sinal_espalhado2 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
+  c4_sinal_espalhado1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
+  c4_sinal_atrasado5 = (real_T *)ssGetInputPortSignal(chartInstance->S, 5);
+  c4_sinal_atrasado4 = (real_T *)ssGetInputPortSignal(chartInstance->S, 4);
+  c4_sinal_atrasado3 = (real_T *)ssGetInputPortSignal(chartInstance->S, 3);
+  c4_sinal_atrasado2 = (real_T *)ssGetInputPortSignal(chartInstance->S, 2);
+  c4_sinal_atrasado1 = (real_T *)ssGetInputPortSignal(chartInstance->S, 1);
+  c4_k = (real_T *)ssGetInputPortSignal(chartInstance->S, 0);
+  _SFD_SYMBOL_SCOPE_PUSH(0U, 0U);
+  _sfTime_ = sf_get_time(chartInstance->S);
+  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 3U, chartInstance->c4_sfEvent);
+  _SFD_DATA_RANGE_CHECK(*c4_k, 0U);
+  _SFD_DATA_RANGE_CHECK(*c4_sinal_atrasado1, 1U);
+  _SFD_DATA_RANGE_CHECK(*c4_sinal_atrasado2, 2U);
+  _SFD_DATA_RANGE_CHECK(*c4_sinal_atrasado3, 3U);
+  _SFD_DATA_RANGE_CHECK(*c4_sinal_atrasado4, 4U);
+  _SFD_DATA_RANGE_CHECK(*c4_sinal_atrasado5, 5U);
+  chartInstance->c4_sfEvent = CALL_EVENT;
+  c4_chartstep_c4_SistemaCAS_v14(chartInstance);
+  _SFD_SYMBOL_SCOPE_POP();
+  _SFD_CHECK_FOR_STATE_INCONSISTENCY(_SistemaCAS_v14MachineNumber_,
+    chartInstance->chartNumber, chartInstance->instanceNumber);
+  _SFD_DATA_RANGE_CHECK(*c4_sinal_espalhado1, 6U);
+  _SFD_DATA_RANGE_CHECK(*c4_sinal_espalhado2, 7U);
+  _SFD_DATA_RANGE_CHECK(*c4_sinal_espalhado3, 8U);
+  _SFD_DATA_RANGE_CHECK(*c4_sinal_espalhado4, 9U);
+  _SFD_DATA_RANGE_CHECK(*c4_sinal_espalhado5, 10U);
+  for (c4_i0 = 0; c4_i0 < 5; c4_i0++) {
+    _SFD_DATA_RANGE_CHECK((*c4_caminhos)[c4_i0], 11U);
+  }
+}
+
+static void c4_chartstep_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
+  *chartInstance)
+{
   real_T c4_hoistedGlobal;
   real_T c4_b_hoistedGlobal;
   real_T c4_c_hoistedGlobal;
@@ -244,7 +298,7 @@ static void sf_gateway_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   real_T c4_sinal_atrasado3;
   real_T c4_sinal_atrasado4;
   real_T c4_sinal_atrasado5;
-  int32_T c4_i0;
+  int32_T c4_i1;
   real_T c4_caminhos[5];
   uint32_T c4_debug_family_var_map[19];
   real_T c4_espalhamento1;
@@ -289,7 +343,6 @@ static void sf_gateway_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   real_T c4_n_x;
   real_T c4_o_x;
   real_T c4_e_y;
-  int32_T c4_i1;
   real_T *c4_b_sinal_espalhado5;
   real_T *c4_b_sinal_espalhado4;
   real_T *c4_b_sinal_espalhado3;
@@ -314,16 +367,6 @@ static void sf_gateway_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   c4_b_sinal_atrasado2 = (real_T *)ssGetInputPortSignal(chartInstance->S, 2);
   c4_b_sinal_atrasado1 = (real_T *)ssGetInputPortSignal(chartInstance->S, 1);
   c4_b_k = (real_T *)ssGetInputPortSignal(chartInstance->S, 0);
-  _SFD_SYMBOL_SCOPE_PUSH(0U, 0U);
-  _sfTime_ = sf_get_time(chartInstance->S);
-  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 3U, chartInstance->c4_sfEvent);
-  _SFD_DATA_RANGE_CHECK(*c4_b_k, 0U);
-  _SFD_DATA_RANGE_CHECK(*c4_b_sinal_atrasado1, 1U);
-  _SFD_DATA_RANGE_CHECK(*c4_b_sinal_atrasado2, 2U);
-  _SFD_DATA_RANGE_CHECK(*c4_b_sinal_atrasado3, 3U);
-  _SFD_DATA_RANGE_CHECK(*c4_b_sinal_atrasado4, 4U);
-  _SFD_DATA_RANGE_CHECK(*c4_b_sinal_atrasado5, 5U);
-  chartInstance->c4_sfEvent = CALL_EVENT;
   _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 3U, chartInstance->c4_sfEvent);
   c4_hoistedGlobal = *c4_b_k;
   c4_b_hoistedGlobal = *c4_b_sinal_atrasado1;
@@ -337,8 +380,8 @@ static void sf_gateway_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   c4_sinal_atrasado3 = c4_d_hoistedGlobal;
   c4_sinal_atrasado4 = c4_e_hoistedGlobal;
   c4_sinal_atrasado5 = c4_f_hoistedGlobal;
-  for (c4_i0 = 0; c4_i0 < 5; c4_i0++) {
-    c4_caminhos[c4_i0] = (*c4_b_caminhos)[c4_i0];
+  for (c4_i1 = 0; c4_i1 < 5; c4_i1++) {
+    c4_caminhos[c4_i1] = (*c4_b_caminhos)[c4_i1];
   }
 
   _SFD_SYMBOL_SCOPE_PUSH_EML(0U, 19U, 19U, c4_debug_family_names,
@@ -375,34 +418,34 @@ static void sf_gateway_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_sinal_espalhado5, 18U,
     c4_sf_marshallOut, c4_sf_marshallIn);
   CV_EML_FCN(0, 0);
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 11);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 12);
   c4_d0 = c4_caminhos[0];
   c4_b_log10(chartInstance, &c4_d0);
   c4_espalhamento1 = -c4_k * 10.0 * c4_d0;
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 12);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 13);
   c4_d1 = c4_caminhos[1];
   c4_b_log10(chartInstance, &c4_d1);
   c4_espalhamento2 = -c4_k * 10.0 * c4_d1;
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 13);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 14);
   c4_d2 = c4_caminhos[2];
   c4_b_log10(chartInstance, &c4_d2);
   c4_espalhamento3 = -c4_k * 10.0 * c4_d2;
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 14);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 15);
   c4_d3 = c4_caminhos[3];
   c4_b_log10(chartInstance, &c4_d3);
   c4_espalhamento4 = -c4_k * 10.0 * c4_d3;
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 15);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 16);
   c4_d4 = c4_caminhos[4];
   c4_b_log10(chartInstance, &c4_d4);
   c4_espalhamento5 = -c4_k * 10.0 * c4_d4;
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 18);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 23);
   c4_A = c4_espalhamento1;
   c4_x = c4_A;
   c4_b_x = c4_x;
   c4_c_x = c4_b_x;
   c4_y = c4_c_x / 10.0;
   c4_sinal_espalhado1 = c4_sinal_atrasado1 * c4_mpower(chartInstance, 10.0, c4_y);
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 19);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 24);
   c4_b_A = c4_espalhamento2;
   c4_d_x = c4_b_A;
   c4_e_x = c4_d_x;
@@ -410,7 +453,7 @@ static void sf_gateway_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   c4_b_y = c4_f_x / 10.0;
   c4_sinal_espalhado2 = c4_sinal_atrasado2 * c4_mpower(chartInstance, 10.0,
     c4_b_y);
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 20);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 25);
   c4_c_A = c4_espalhamento3;
   c4_g_x = c4_c_A;
   c4_h_x = c4_g_x;
@@ -418,7 +461,7 @@ static void sf_gateway_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   c4_c_y = c4_i_x / 10.0;
   c4_sinal_espalhado3 = c4_sinal_atrasado3 * c4_mpower(chartInstance, 10.0,
     c4_c_y);
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 21);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 26);
   c4_d_A = c4_espalhamento4;
   c4_j_x = c4_d_A;
   c4_k_x = c4_j_x;
@@ -426,7 +469,7 @@ static void sf_gateway_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   c4_d_y = c4_l_x / 10.0;
   c4_sinal_espalhado4 = c4_sinal_atrasado4 * c4_mpower(chartInstance, 10.0,
     c4_d_y);
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 22);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 27);
   c4_e_A = c4_espalhamento5;
   c4_m_x = c4_e_A;
   c4_n_x = c4_m_x;
@@ -434,7 +477,7 @@ static void sf_gateway_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   c4_e_y = c4_o_x / 10.0;
   c4_sinal_espalhado5 = c4_sinal_atrasado5 * c4_mpower(chartInstance, 10.0,
     c4_e_y);
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, -22);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, -27);
   _SFD_SYMBOL_SCOPE_POP();
   *c4_b_sinal_espalhado1 = c4_sinal_espalhado1;
   *c4_b_sinal_espalhado2 = c4_sinal_espalhado2;
@@ -442,17 +485,6 @@ static void sf_gateway_c4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
   *c4_b_sinal_espalhado4 = c4_sinal_espalhado4;
   *c4_b_sinal_espalhado5 = c4_sinal_espalhado5;
   _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 3U, chartInstance->c4_sfEvent);
-  _SFD_SYMBOL_SCOPE_POP();
-  _SFD_CHECK_FOR_STATE_INCONSISTENCY(_SistemaCAS_v14MachineNumber_,
-    chartInstance->chartNumber, chartInstance->instanceNumber);
-  _SFD_DATA_RANGE_CHECK(*c4_b_sinal_espalhado1, 6U);
-  _SFD_DATA_RANGE_CHECK(*c4_b_sinal_espalhado2, 7U);
-  _SFD_DATA_RANGE_CHECK(*c4_b_sinal_espalhado3, 8U);
-  _SFD_DATA_RANGE_CHECK(*c4_b_sinal_espalhado4, 9U);
-  _SFD_DATA_RANGE_CHECK(*c4_b_sinal_espalhado5, 10U);
-  for (c4_i1 = 0; c4_i1 < 5; c4_i1++) {
-    _SFD_DATA_RANGE_CHECK((*c4_b_caminhos)[c4_i1], 11U);
-  }
 }
 
 static void initSimStructsc4_SistemaCAS_v14(SFc4_SistemaCAS_v14InstanceStruct
@@ -1555,10 +1587,10 @@ extern void utFree(void*);
 
 void sf_c4_SistemaCAS_v14_get_check_sum(mxArray *plhs[])
 {
-  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(466836630U);
-  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(4085141892U);
-  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(4074306133U);
-  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2340140649U);
+  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3956928414U);
+  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(4077235612U);
+  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2355675257U);
+  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2782019609U);
 }
 
 mxArray *sf_c4_SistemaCAS_v14_get_autoinheritance_info(void)
@@ -1570,7 +1602,7 @@ mxArray *sf_c4_SistemaCAS_v14_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("hf27KaVxua6b9cBMvM4YPH");
+    mxArray *mxChecksum = mxCreateString("aHbzYgbngngyPGqTytFW5E");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -1928,7 +1960,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
         /* Initialization of MATLAB Function Model Coverage */
         _SFD_CV_INIT_EML(0,1,1,0,0,0,0,0,0,0,0);
-        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,1046);
+        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,1507);
         _SFD_SET_DATA_COMPILED_PROPS(0,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
           (MexFcnForType)c4_sf_marshallOut,(MexInFcnForType)NULL);
         _SFD_SET_DATA_COMPILED_PROPS(1,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
@@ -2019,7 +2051,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
 static const char* sf_get_instance_specialization(void)
 {
-  return "SAE4pp4x7ZC8HDOEvzzTd";
+  return "hAWZXLcbFLytwqL518zSwG";
 }
 
 static void sf_opaque_initialize_c4_SistemaCAS_v14(void *chartInstanceVar)
@@ -2204,10 +2236,10 @@ static void mdlSetWorkWidths_c4_SistemaCAS_v14(SimStruct *S)
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(2621109035U));
-  ssSetChecksum1(S,(1493732021U));
-  ssSetChecksum2(S,(1881968626U));
-  ssSetChecksum3(S,(2368481866U));
+  ssSetChecksum0(S,(1368825914U));
+  ssSetChecksum1(S,(2474613464U));
+  ssSetChecksum2(S,(2310336271U));
+  ssSetChecksum3(S,(3186002080U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
   ssSupportsMultipleExecInstances(S,1);

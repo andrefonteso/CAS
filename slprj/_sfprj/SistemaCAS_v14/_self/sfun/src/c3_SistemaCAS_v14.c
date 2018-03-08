@@ -488,15 +488,15 @@ static void c3_chartstep_c3_SistemaCAS_v14(SFc3_SistemaCAS_v14InstanceStruct
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_sinal_atenuado_total, 28U,
     c3_sf_marshallOut, c3_sf_marshallIn);
   CV_EML_FCN(0, 0);
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 5);
-  c3_T = c3_parametros_ambientais[0];
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 6);
-  c3_S = c3_parametros_ambientais[1];
   _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 7);
+  c3_T = c3_parametros_ambientais[0];
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 8);
+  c3_S = c3_parametros_ambientais[1];
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 9);
   c3_pH = c3_parametros_ambientais[2];
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 10);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 12);
   c3_D = c3_parametros_aquario[2];
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 13);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 15);
   c3_A = c3_S;
   c3_x = c3_A;
   c3_b_x = c3_x;
@@ -513,7 +513,7 @@ static void c3_chartstep_c3_SistemaCAS_v14(SFc3_SistemaCAS_v14InstanceStruct
   c3_d0 = c3_y;
   c3_b_sqrt(chartInstance, &c3_d0);
   c3_f1 = 0.78 * c3_d0 * c3_h_x;
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 14);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 16);
   c3_c_A = c3_T;
   c3_i_x = c3_c_A;
   c3_j_x = c3_i_x;
@@ -523,7 +523,7 @@ static void c3_chartstep_c3_SistemaCAS_v14(SFc3_SistemaCAS_v14InstanceStruct
   c3_m_x = c3_l_x;
   c3_m_x = muDoubleScalarExp(c3_m_x);
   c3_f2 = 42.0 * c3_m_x;
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 17);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 22);
   c3_d_A = c3_pH - 8.0;
   c3_n_x = c3_d_A;
   c3_o_x = c3_n_x;
@@ -586,27 +586,27 @@ static void c3_chartstep_c3_SistemaCAS_v14(SFc3_SistemaCAS_v14InstanceStruct
   c3_rb_x = muDoubleScalarExp(c3_rb_x);
   c3_a = (c3_h_y + c3_o_y) + 0.00049 * c3_mpower(chartInstance, c3_frequencia) *
     c3_rb_x;
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 27);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 31);
   c3_d1 = c3_a;
   c3_b_log10(chartInstance, &c3_d1);
   c3_atenuacao1 = -10.0 * c3_d1 * c3_caminhos[0];
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 28);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 32);
   c3_d2 = c3_a;
   c3_b_log10(chartInstance, &c3_d2);
   c3_atenuacao2 = -10.0 * c3_d2 * c3_caminhos[1];
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 29);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 33);
   c3_d3 = c3_a;
   c3_b_log10(chartInstance, &c3_d3);
   c3_atenuacao3 = -10.0 * c3_d3 * c3_caminhos[2];
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 30);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 34);
   c3_d4 = c3_a;
   c3_b_log10(chartInstance, &c3_d4);
   c3_atenuacao4 = -10.0 * c3_d4 * c3_caminhos[3];
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 31);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 35);
   c3_d5 = c3_a;
   c3_b_log10(chartInstance, &c3_d5);
   c3_atenuacao5 = -10.0 * c3_d5 * c3_caminhos[4];
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 34);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 42);
   c3_l_A = c3_atenuacao1;
   c3_sb_x = c3_l_A;
   c3_tb_x = c3_sb_x;
@@ -614,7 +614,7 @@ static void c3_chartstep_c3_SistemaCAS_v14(SFc3_SistemaCAS_v14InstanceStruct
   c3_r_y = c3_ub_x / 10.0;
   c3_sinal_atenuado1 = c3_sinal_espalhado1 * c3_b_mpower(chartInstance, 10.0,
     c3_r_y);
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 35);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 43);
   c3_m_A = c3_atenuacao2;
   c3_vb_x = c3_m_A;
   c3_wb_x = c3_vb_x;
@@ -622,7 +622,7 @@ static void c3_chartstep_c3_SistemaCAS_v14(SFc3_SistemaCAS_v14InstanceStruct
   c3_s_y = c3_xb_x / 10.0;
   c3_sinal_atenuado2 = c3_sinal_espalhado2 * c3_b_mpower(chartInstance, 10.0,
     c3_s_y);
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 36);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 44);
   c3_n_A = c3_atenuacao3;
   c3_yb_x = c3_n_A;
   c3_ac_x = c3_yb_x;
@@ -630,7 +630,7 @@ static void c3_chartstep_c3_SistemaCAS_v14(SFc3_SistemaCAS_v14InstanceStruct
   c3_t_y = c3_bc_x / 10.0;
   c3_sinal_atenuado3 = c3_sinal_espalhado3 * c3_b_mpower(chartInstance, 10.0,
     c3_t_y);
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 37);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 45);
   c3_o_A = c3_atenuacao4;
   c3_cc_x = c3_o_A;
   c3_dc_x = c3_cc_x;
@@ -638,7 +638,7 @@ static void c3_chartstep_c3_SistemaCAS_v14(SFc3_SistemaCAS_v14InstanceStruct
   c3_u_y = c3_ec_x / 10.0;
   c3_sinal_atenuado4 = c3_sinal_espalhado4 * c3_b_mpower(chartInstance, 10.0,
     c3_u_y);
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 38);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 46);
   c3_p_A = c3_atenuacao5;
   c3_fc_x = c3_p_A;
   c3_gc_x = c3_fc_x;
@@ -646,10 +646,10 @@ static void c3_chartstep_c3_SistemaCAS_v14(SFc3_SistemaCAS_v14InstanceStruct
   c3_v_y = c3_hc_x / 10.0;
   c3_sinal_atenuado5 = c3_sinal_espalhado5 * c3_b_mpower(chartInstance, 10.0,
     c3_v_y);
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 40);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 51);
   c3_sinal_atenuado_total = (((c3_sinal_atenuado1 + c3_sinal_atenuado2) +
     c3_sinal_atenuado3) + c3_sinal_atenuado4) + c3_sinal_atenuado5;
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, -40);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, -51);
   _SFD_SYMBOL_SCOPE_POP();
   *c3_b_sinal_atenuado_total = c3_sinal_atenuado_total;
   _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 2U, chartInstance->c3_sfEvent);
@@ -1983,10 +1983,10 @@ extern void utFree(void*);
 
 void sf_c3_SistemaCAS_v14_get_check_sum(mxArray *plhs[])
 {
-  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3317648279U);
-  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2607522628U);
-  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(3206227103U);
-  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2054500359U);
+  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(4221095986U);
+  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(930869170U);
+  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(699142742U);
+  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2450998379U);
 }
 
 mxArray *sf_c3_SistemaCAS_v14_get_autoinheritance_info(void)
@@ -1998,7 +1998,7 @@ mxArray *sf_c3_SistemaCAS_v14_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("Ks4qexH21yQ1Vg1aVBy9JH");
+    mxArray *mxChecksum = mxCreateString("YMmMvgvsvGawuWGVQ9d0n");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -2316,7 +2316,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
         /* Initialization of MATLAB Function Model Coverage */
         _SFD_CV_INIT_EML(0,1,1,0,0,0,0,0,0,0,0);
-        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,1603);
+        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,2584);
 
         {
           unsigned int dimVector[2];
@@ -2409,7 +2409,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
 static const char* sf_get_instance_specialization(void)
 {
-  return "j4tnYZXXDnnsYAEZmo6dMB";
+  return "G2pXjU85bzbYJehQk8pwGC";
 }
 
 static void sf_opaque_initialize_c3_SistemaCAS_v14(void *chartInstanceVar)
@@ -2596,10 +2596,10 @@ static void mdlSetWorkWidths_c3_SistemaCAS_v14(SimStruct *S)
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(2562751183U));
-  ssSetChecksum1(S,(1738202543U));
-  ssSetChecksum2(S,(225950702U));
-  ssSetChecksum3(S,(3237401508U));
+  ssSetChecksum0(S,(3107453220U));
+  ssSetChecksum1(S,(671637074U));
+  ssSetChecksum2(S,(4031289764U));
+  ssSetChecksum3(S,(1795828310U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
   ssSupportsMultipleExecInstances(S,1);

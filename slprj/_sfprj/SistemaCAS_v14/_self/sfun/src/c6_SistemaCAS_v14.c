@@ -282,9 +282,9 @@ static void c6_chartstep_c6_SistemaCAS_v14(SFc6_SistemaCAS_v14InstanceStruct
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c6_ruido_total, 10U, c6_sf_marshallOut,
     c6_sf_marshallIn);
   CV_EML_FCN(0, 0);
-  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, 3);
+  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, 5);
   c6_f = c6_frequencia;
-  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, 8);
+  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, 12);
   c6_d0 = c6_f;
   c6_b_log10(chartInstance, &c6_d0);
   c6_A = 17.0 - 30.0 * c6_d0;
@@ -293,7 +293,7 @@ static void c6_chartstep_c6_SistemaCAS_v14(SFc6_SistemaCAS_v14InstanceStruct
   c6_c_x = c6_b_x;
   c6_y = c6_c_x / 10.0;
   c6_Nt = c6_mpower(chartInstance, 10.0, c6_y);
-  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, 11);
+  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, 17);
   c6_d1 = c6_f;
   c6_b_log10(chartInstance, &c6_d1);
   c6_d2 = c6_f + 0.03;
@@ -304,7 +304,7 @@ static void c6_chartstep_c6_SistemaCAS_v14(SFc6_SistemaCAS_v14InstanceStruct
   c6_f_x = c6_e_x;
   c6_b_y = c6_f_x / 10.0;
   c6_Ns = c6_mpower(chartInstance, 10.0, c6_b_y);
-  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, 14);
+  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, 22);
   c6_a = c6_v;
   c6_b_a = c6_a;
   c6_c_a = c6_b_a;
@@ -333,7 +333,7 @@ static void c6_chartstep_c6_SistemaCAS_v14(SFc6_SistemaCAS_v14InstanceStruct
   c6_j_x = c6_i_x;
   c6_c_y = c6_j_x / 10.0;
   c6_Nw = c6_mpower(chartInstance, 10.0, c6_c_y);
-  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, 17);
+  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, 27);
   c6_d5 = c6_f;
   c6_b_log10(chartInstance, &c6_d5);
   c6_d_A = -15.0 + 20.0 * c6_d5;
@@ -342,9 +342,9 @@ static void c6_chartstep_c6_SistemaCAS_v14(SFc6_SistemaCAS_v14InstanceStruct
   c6_m_x = c6_l_x;
   c6_d_y = c6_m_x / 10.0;
   c6_Nth = c6_mpower(chartInstance, 10.0, c6_d_y);
-  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, 20);
+  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, 32);
   c6_ruido_total = ((c6_Nt + c6_Ns) + c6_Nw) + c6_Nth;
-  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, -20);
+  _SFD_EML_CALL(0U, chartInstance->c6_sfEvent, -32);
   _SFD_SYMBOL_SCOPE_POP();
   *c6_b_ruido_total = c6_ruido_total;
   _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 5U, chartInstance->c6_sfEvent);
@@ -1539,10 +1539,10 @@ extern void utFree(void*);
 
 void sf_c6_SistemaCAS_v14_get_check_sum(mxArray *plhs[])
 {
-  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3294367438U);
-  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2209615842U);
-  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(4055612968U);
-  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(83837663U);
+  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1538479036U);
+  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(1825021976U);
+  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2740387373U);
+  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(3597589941U);
 }
 
 mxArray *sf_c6_SistemaCAS_v14_get_autoinheritance_info(void)
@@ -1554,7 +1554,7 @@ mxArray *sf_c6_SistemaCAS_v14_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("ZlVrn9Qoc0m8rY4vlEswBH");
+    mxArray *mxChecksum = mxCreateString("VJNpyzd1RBCt6TJi4ggt3G");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -1752,7 +1752,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
         /* Initialization of MATLAB Function Model Coverage */
         _SFD_CV_INIT_EML(0,1,1,0,0,0,0,0,0,0,0);
-        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,552);
+        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,1677);
         _SFD_SET_DATA_COMPILED_PROPS(0,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
           (MexFcnForType)c6_sf_marshallOut,(MexInFcnForType)c6_sf_marshallIn);
         _SFD_SET_DATA_COMPILED_PROPS(1,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
@@ -1787,7 +1787,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
 static const char* sf_get_instance_specialization(void)
 {
-  return "8aCA8B3pAidzrDvm1hpzyB";
+  return "orNErmn9QwmH8a93SPX6fE";
 }
 
 static void sf_opaque_initialize_c6_SistemaCAS_v14(void *chartInstanceVar)
@@ -1968,10 +1968,10 @@ static void mdlSetWorkWidths_c6_SistemaCAS_v14(SimStruct *S)
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(195207382U));
-  ssSetChecksum1(S,(2887150846U));
-  ssSetChecksum2(S,(883830821U));
-  ssSetChecksum3(S,(2361063332U));
+  ssSetChecksum0(S,(2671454145U));
+  ssSetChecksum1(S,(3959558863U));
+  ssSetChecksum2(S,(177348438U));
+  ssSetChecksum3(S,(2083072111U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
   ssSupportsMultipleExecInstances(S,1);

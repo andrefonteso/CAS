@@ -1,8 +1,9 @@
-% Estudo da relação entre o ângulo de diretividade e os parâmetros da 
-% geometriado aquário.
-% O objetivo desse estudo é encontrar o comprimento (L) e a profundidade (D)
-% ideal do ambiente de simulação do aquário a partir do gráfico do padrão 
-% de radiação do transdutor gerado no COMSOL.
+%% Estudo dos Ângulos Gerados pelo Transdutor Piezoelétrico
+% Este estudo realciona o ângulo de diretividade e os parâmetros da 
+% geometria do aquário. Estes ângulos foram obtidos através do gráfico 
+% polar do diagrama de radiação obtidos no COMSOL. O objetivo desse estudo
+% é encontrar o comprimento (L) e a profundidade (D) ideal da geometria do 
+% aquário no qual será realizado a simulação.
 
 clear all;
 close all;
