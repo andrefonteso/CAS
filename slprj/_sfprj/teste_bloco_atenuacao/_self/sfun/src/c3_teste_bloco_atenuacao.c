@@ -18,9 +18,9 @@
 
 /* Variable Definitions */
 static real_T _sfTime_;
-static const char * c3_debug_family_names[16] = { "T", "S", "pH", "D", "caminho",
-  "frequencia", "f1", "f2", "a", "atenuacao", "nargin", "nargout",
-  "sinal_espalhado", "sinal_atenuado", "ganho", "difer" };
+static const char * c3_debug_family_names[14] = { "T", "S", "pH", "D", "caminho",
+  "frequencia", "f1", "f2", "perda_absorcao", "nargin", "nargout",
+  "sinal_espalhado", "alfa", "sinal_absorvido" };
 
 /* Function Declarations */
 static void initialize_c3_teste_bloco_atenuacao
@@ -47,7 +47,7 @@ static void init_script_number_translation(uint32_T c3_machineNumber, uint32_T
   c3_chartNumber, uint32_T c3_instanceNumber);
 static const mxArray *c3_sf_marshallOut(void *chartInstanceVoid, void *c3_inData);
 static real_T c3_emlrt_marshallIn(SFc3_teste_bloco_atenuacaoInstanceStruct
-  *chartInstance, const mxArray *c3_difer, const char_T *c3_identifier);
+  *chartInstance, const mxArray *c3_sinal_absorvido, const char_T *c3_identifier);
 static real_T c3_b_emlrt_marshallIn(SFc3_teste_bloco_atenuacaoInstanceStruct
   *chartInstance, const mxArray *c3_u, const emlrtMsgIdentifier *c3_parentId);
 static void c3_sf_marshallIn(void *chartInstanceVoid, const mxArray
@@ -115,42 +115,32 @@ static const mxArray *get_sim_state_c3_teste_bloco_atenuacao
   real_T c3_b_hoistedGlobal;
   real_T c3_b_u;
   const mxArray *c3_c_y = NULL;
-  real_T c3_c_hoistedGlobal;
-  real_T c3_c_u;
+  uint8_T c3_c_hoistedGlobal;
+  uint8_T c3_c_u;
   const mxArray *c3_d_y = NULL;
-  uint8_T c3_d_hoistedGlobal;
-  uint8_T c3_d_u;
-  const mxArray *c3_e_y = NULL;
-  real_T *c3_difer;
-  real_T *c3_ganho;
-  real_T *c3_sinal_atenuado;
-  c3_difer = (real_T *)ssGetOutputPortSignal(chartInstance->S, 3);
-  c3_ganho = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
-  c3_sinal_atenuado = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
+  real_T *c3_alfa;
+  real_T *c3_sinal_absorvido;
+  c3_sinal_absorvido = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
+  c3_alfa = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   c3_st = NULL;
   c3_st = NULL;
   c3_y = NULL;
-  sf_mex_assign(&c3_y, sf_mex_createcellmatrix(4, 1), false);
-  c3_hoistedGlobal = *c3_difer;
+  sf_mex_assign(&c3_y, sf_mex_createcellmatrix(3, 1), false);
+  c3_hoistedGlobal = *c3_alfa;
   c3_u = c3_hoistedGlobal;
   c3_b_y = NULL;
   sf_mex_assign(&c3_b_y, sf_mex_create("y", &c3_u, 0, 0U, 0U, 0U, 0), false);
   sf_mex_setcell(c3_y, 0, c3_b_y);
-  c3_b_hoistedGlobal = *c3_ganho;
+  c3_b_hoistedGlobal = *c3_sinal_absorvido;
   c3_b_u = c3_b_hoistedGlobal;
   c3_c_y = NULL;
   sf_mex_assign(&c3_c_y, sf_mex_create("y", &c3_b_u, 0, 0U, 0U, 0U, 0), false);
   sf_mex_setcell(c3_y, 1, c3_c_y);
-  c3_c_hoistedGlobal = *c3_sinal_atenuado;
+  c3_c_hoistedGlobal = chartInstance->c3_is_active_c3_teste_bloco_atenuacao;
   c3_c_u = c3_c_hoistedGlobal;
   c3_d_y = NULL;
-  sf_mex_assign(&c3_d_y, sf_mex_create("y", &c3_c_u, 0, 0U, 0U, 0U, 0), false);
+  sf_mex_assign(&c3_d_y, sf_mex_create("y", &c3_c_u, 3, 0U, 0U, 0U, 0), false);
   sf_mex_setcell(c3_y, 2, c3_d_y);
-  c3_d_hoistedGlobal = chartInstance->c3_is_active_c3_teste_bloco_atenuacao;
-  c3_d_u = c3_d_hoistedGlobal;
-  c3_e_y = NULL;
-  sf_mex_assign(&c3_e_y, sf_mex_create("y", &c3_d_u, 3, 0U, 0U, 0U, 0), false);
-  sf_mex_setcell(c3_y, 3, c3_e_y);
   sf_mex_assign(&c3_st, c3_y, false);
   return c3_st;
 }
@@ -159,22 +149,18 @@ static void set_sim_state_c3_teste_bloco_atenuacao
   (SFc3_teste_bloco_atenuacaoInstanceStruct *chartInstance, const mxArray *c3_st)
 {
   const mxArray *c3_u;
-  real_T *c3_difer;
-  real_T *c3_ganho;
-  real_T *c3_sinal_atenuado;
-  c3_difer = (real_T *)ssGetOutputPortSignal(chartInstance->S, 3);
-  c3_ganho = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
-  c3_sinal_atenuado = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
+  real_T *c3_alfa;
+  real_T *c3_sinal_absorvido;
+  c3_sinal_absorvido = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
+  c3_alfa = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   chartInstance->c3_doneDoubleBufferReInit = true;
   c3_u = sf_mex_dup(c3_st);
-  *c3_difer = c3_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c3_u,
-    0)), "difer");
-  *c3_ganho = c3_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c3_u,
-    1)), "ganho");
-  *c3_sinal_atenuado = c3_emlrt_marshallIn(chartInstance, sf_mex_dup
-    (sf_mex_getcell(c3_u, 2)), "sinal_atenuado");
+  *c3_alfa = c3_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c3_u,
+    0)), "alfa");
+  *c3_sinal_absorvido = c3_emlrt_marshallIn(chartInstance, sf_mex_dup
+    (sf_mex_getcell(c3_u, 1)), "sinal_absorvido");
   chartInstance->c3_is_active_c3_teste_bloco_atenuacao = c3_d_emlrt_marshallIn
-    (chartInstance, sf_mex_dup(sf_mex_getcell(c3_u, 3)),
+    (chartInstance, sf_mex_dup(sf_mex_getcell(c3_u, 2)),
      "is_active_c3_teste_bloco_atenuacao");
   sf_mex_destroy(&c3_u);
   c3_update_debugger_state_c3_teste_bloco_atenuacao(chartInstance);
@@ -192,7 +178,7 @@ static void sf_gateway_c3_teste_bloco_atenuacao
 {
   real_T c3_hoistedGlobal;
   real_T c3_sinal_espalhado;
-  uint32_T c3_debug_family_var_map[16];
+  uint32_T c3_debug_family_var_map[14];
   real_T c3_T;
   real_T c3_S;
   real_T c3_pH;
@@ -201,36 +187,29 @@ static void sf_gateway_c3_teste_bloco_atenuacao
   real_T c3_frequencia;
   real_T c3_f1;
   real_T c3_f2;
-  real_T c3_a;
-  real_T c3_atenuacao;
+  real_T c3_perda_absorcao;
   real_T c3_nargin = 1.0;
-  real_T c3_nargout = 3.0;
-  real_T c3_sinal_atenuado;
-  real_T c3_ganho;
-  real_T c3_difer;
+  real_T c3_nargout = 2.0;
+  real_T c3_alfa;
+  real_T c3_sinal_absorvido;
   real_T c3_u;
   const mxArray *c3_y = NULL;
   real_T c3_b_u;
   const mxArray *c3_b_y = NULL;
-  real_T c3_c_u;
-  const mxArray *c3_c_y = NULL;
-  real_T *c3_b_difer;
-  real_T *c3_b_ganho;
-  real_T *c3_b_sinal_atenuado;
+  real_T *c3_b_sinal_absorvido;
+  real_T *c3_b_alfa;
   real_T *c3_b_sinal_espalhado;
-  c3_b_difer = (real_T *)ssGetOutputPortSignal(chartInstance->S, 3);
-  c3_b_ganho = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
-  c3_b_sinal_atenuado = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
+  c3_b_sinal_absorvido = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
   c3_b_sinal_espalhado = (real_T *)ssGetInputPortSignal(chartInstance->S, 0);
+  c3_b_alfa = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   _SFD_SYMBOL_SCOPE_PUSH(0U, 0U);
   _sfTime_ = sf_get_time(chartInstance->S);
-  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 0U, chartInstance->c3_sfEvent);
-  _SFD_DATA_RANGE_CHECK(*c3_b_sinal_espalhado, 0U);
+  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 1U, chartInstance->c3_sfEvent);
   chartInstance->c3_sfEvent = CALL_EVENT;
-  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 0U, chartInstance->c3_sfEvent);
+  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 1U, chartInstance->c3_sfEvent);
   c3_hoistedGlobal = *c3_b_sinal_espalhado;
   c3_sinal_espalhado = c3_hoistedGlobal;
-  _SFD_SYMBOL_SCOPE_PUSH_EML(0U, 16U, 16U, c3_debug_family_names,
+  _SFD_SYMBOL_SCOPE_PUSH_EML(0U, 14U, 14U, c3_debug_family_names,
     c3_debug_family_var_map);
   _SFD_SYMBOL_SCOPE_ADD_EML(&c3_T, 0U, c3_sf_marshallOut);
   _SFD_SYMBOL_SCOPE_ADD_EML(&c3_S, 1U, c3_sf_marshallOut);
@@ -240,77 +219,61 @@ static void sf_gateway_c3_teste_bloco_atenuacao
   _SFD_SYMBOL_SCOPE_ADD_EML(&c3_frequencia, 5U, c3_sf_marshallOut);
   _SFD_SYMBOL_SCOPE_ADD_EML(&c3_f1, 6U, c3_sf_marshallOut);
   _SFD_SYMBOL_SCOPE_ADD_EML(&c3_f2, 7U, c3_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c3_a, 8U, c3_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c3_atenuacao, 9U, c3_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_nargin, 10U, c3_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c3_perda_absorcao, 8U, c3_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_nargin, 9U, c3_sf_marshallOut,
     c3_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_nargout, 11U, c3_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_nargout, 10U, c3_sf_marshallOut,
     c3_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c3_sinal_espalhado, 12U, c3_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_sinal_atenuado, 13U,
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c3_sinal_espalhado, 11U, c3_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c3_alfa, 12U, c3_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_sinal_absorvido, 13U,
     c3_sf_marshallOut, c3_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_ganho, 14U, c3_sf_marshallOut,
-    c3_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c3_difer, 15U, c3_sf_marshallOut,
-    c3_sf_marshallIn);
   CV_EML_FCN(0, 0);
   _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 6);
-  c3_T = 32.0;
+  c3_T = 25.0;
   _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 7);
-  c3_S = 1.0;
+  c3_S = 35.0;
   _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 8);
-  c3_pH = 7.2;
+  c3_pH = 7.8;
   _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 11);
-  c3_D = 3.0;
+  c3_D = 0.003;
   _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 12);
-  c3_caminho = 6.0;
+  c3_caminho = 0.6;
   _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 13);
-  c3_frequencia = 19670.0;
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 16);
-  c3_f1 = 0.45141591453411578;
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 17);
-  c3_f2 = 275.89560722044797;
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 23);
-  c3_a = 48582.007761346547;
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 27);
-  c3_a = 48.582007761346546;
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 33);
-  c3_atenuacao = -101.18852754250119;
-  sf_mex_printf("%s =\\n", "atenuacao");
-  c3_u = c3_atenuacao;
+  c3_frequencia = 19.67;
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 18);
+  c3_f1 = 2.040259697071666;
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 19);
+  c3_f2 = 182.77535922599191;
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 40);
+  c3_alfa = 1.9447532016818867;
+  sf_mex_printf("%s =\\n", "alfa");
+  c3_u = c3_alfa;
   c3_y = NULL;
   sf_mex_assign(&c3_y, sf_mex_create("y", &c3_u, 0, 0U, 0U, 0U, 0), false);
   sf_mex_call_debug(sfGlobalDebugInstanceStruct, "disp", 0U, 1U, 14, c3_y);
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 42);
-  c3_eml_scalar_eg(chartInstance);
-  c3_eml_scalar_eg(chartInstance);
-  c3_sinal_atenuado = c3_sinal_espalhado * 7.6058410612872042E-11;
-  sf_mex_printf("%s =\\n", "sinal_atenuado");
-  c3_b_u = c3_sinal_atenuado;
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 67);
+  c3_perda_absorcao = 1.7331869708903558;
+  sf_mex_printf("%s =\\n", "perda_absorcao");
+  c3_b_u = c3_perda_absorcao;
   c3_b_y = NULL;
   sf_mex_assign(&c3_b_y, sf_mex_create("y", &c3_b_u, 0, 0U, 0U, 0U, 0), false);
   sf_mex_call_debug(sfGlobalDebugInstanceStruct, "disp", 0U, 1U, 14, c3_b_y);
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 44);
-  c3_difer = c3_sinal_atenuado - (-c3_atenuacao);
-  sf_mex_printf("%s =\\n", "difer");
-  c3_c_u = c3_difer;
-  c3_c_y = NULL;
-  sf_mex_assign(&c3_c_y, sf_mex_create("y", &c3_c_u, 0, 0U, 0U, 0U, 0), false);
-  sf_mex_call_debug(sfGlobalDebugInstanceStruct, "disp", 0U, 1U, 14, c3_c_y);
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 50);
-  c3_ganho = c3_sinal_atenuado - c3_sinal_espalhado;
-  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, -50);
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, 75);
+  c3_eml_scalar_eg(chartInstance);
+  c3_eml_scalar_eg(chartInstance);
+  c3_sinal_absorvido = c3_sinal_espalhado * 0.67093632093215572;
+  _SFD_EML_CALL(0U, chartInstance->c3_sfEvent, -75);
   _SFD_SYMBOL_SCOPE_POP();
-  *c3_b_sinal_atenuado = c3_sinal_atenuado;
-  *c3_b_ganho = c3_ganho;
-  *c3_b_difer = c3_difer;
-  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 0U, chartInstance->c3_sfEvent);
+  *c3_b_alfa = c3_alfa;
+  *c3_b_sinal_absorvido = c3_sinal_absorvido;
+  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 1U, chartInstance->c3_sfEvent);
   _SFD_SYMBOL_SCOPE_POP();
   _SFD_CHECK_FOR_STATE_INCONSISTENCY(_teste_bloco_atenuacaoMachineNumber_,
     chartInstance->chartNumber, chartInstance->instanceNumber);
-  _SFD_DATA_RANGE_CHECK(*c3_b_sinal_atenuado, 1U);
-  _SFD_DATA_RANGE_CHECK(*c3_b_ganho, 2U);
-  _SFD_DATA_RANGE_CHECK(*c3_b_difer, 3U);
+  _SFD_DATA_RANGE_CHECK(*c3_b_alfa, 0U);
+  _SFD_DATA_RANGE_CHECK(*c3_b_sinal_espalhado, 1U);
+  _SFD_DATA_RANGE_CHECK(*c3_b_sinal_absorvido, 2U);
 }
 
 static void initSimStructsc3_teste_bloco_atenuacao
@@ -343,14 +306,15 @@ static const mxArray *c3_sf_marshallOut(void *chartInstanceVoid, void *c3_inData
 }
 
 static real_T c3_emlrt_marshallIn(SFc3_teste_bloco_atenuacaoInstanceStruct
-  *chartInstance, const mxArray *c3_difer, const char_T *c3_identifier)
+  *chartInstance, const mxArray *c3_sinal_absorvido, const char_T *c3_identifier)
 {
   real_T c3_y;
   emlrtMsgIdentifier c3_thisId;
   c3_thisId.fIdentifier = c3_identifier;
   c3_thisId.fParent = NULL;
-  c3_y = c3_b_emlrt_marshallIn(chartInstance, sf_mex_dup(c3_difer), &c3_thisId);
-  sf_mex_destroy(&c3_difer);
+  c3_y = c3_b_emlrt_marshallIn(chartInstance, sf_mex_dup(c3_sinal_absorvido),
+    &c3_thisId);
+  sf_mex_destroy(&c3_sinal_absorvido);
   return c3_y;
 }
 
@@ -369,18 +333,19 @@ static real_T c3_b_emlrt_marshallIn(SFc3_teste_bloco_atenuacaoInstanceStruct
 static void c3_sf_marshallIn(void *chartInstanceVoid, const mxArray
   *c3_mxArrayInData, const char_T *c3_varName, void *c3_outData)
 {
-  const mxArray *c3_difer;
+  const mxArray *c3_sinal_absorvido;
   const char_T *c3_identifier;
   emlrtMsgIdentifier c3_thisId;
   real_T c3_y;
   SFc3_teste_bloco_atenuacaoInstanceStruct *chartInstance;
   chartInstance = (SFc3_teste_bloco_atenuacaoInstanceStruct *)chartInstanceVoid;
-  c3_difer = sf_mex_dup(c3_mxArrayInData);
+  c3_sinal_absorvido = sf_mex_dup(c3_mxArrayInData);
   c3_identifier = c3_varName;
   c3_thisId.fIdentifier = c3_identifier;
   c3_thisId.fParent = NULL;
-  c3_y = c3_b_emlrt_marshallIn(chartInstance, sf_mex_dup(c3_difer), &c3_thisId);
-  sf_mex_destroy(&c3_difer);
+  c3_y = c3_b_emlrt_marshallIn(chartInstance, sf_mex_dup(c3_sinal_absorvido),
+    &c3_thisId);
+  sf_mex_destroy(&c3_sinal_absorvido);
   *(real_T *)c3_outData = c3_y;
   sf_mex_destroy(&c3_mxArrayInData);
 }
@@ -1407,10 +1372,10 @@ extern void utFree(void*);
 
 void sf_c3_teste_bloco_atenuacao_get_check_sum(mxArray *plhs[])
 {
-  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1490256153U);
-  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2231853159U);
-  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(953008657U);
-  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(905327222U);
+  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(2293391212U);
+  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(1493280091U);
+  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(3920162054U);
+  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(4220293665U);
 }
 
 mxArray *sf_c3_teste_bloco_atenuacao_get_autoinheritance_info(void)
@@ -1422,7 +1387,7 @@ mxArray *sf_c3_teste_bloco_atenuacao_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("kZRDblhnbbeFvshzsBcSfH");
+    mxArray *mxChecksum = mxCreateString("8ZaiuP98caeuSGxxeIJvvE");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -1460,7 +1425,7 @@ mxArray *sf_c3_teste_bloco_atenuacao_get_autoinheritance_info(void)
   {
     const char *dataFields[] = { "size", "type", "complexity" };
 
-    mxArray *mxData = mxCreateStructMatrix(1,3,3,dataFields);
+    mxArray *mxData = mxCreateStructMatrix(1,2,3,dataFields);
 
     {
       mxArray *mxSize = mxCreateDoubleMatrix(1,2,mxREAL);
@@ -1499,25 +1464,6 @@ mxArray *sf_c3_teste_bloco_atenuacao_get_autoinheritance_info(void)
     }
 
     mxSetField(mxData,1,"complexity",mxCreateDoubleScalar(0));
-
-    {
-      mxArray *mxSize = mxCreateDoubleMatrix(1,2,mxREAL);
-      double *pr = mxGetPr(mxSize);
-      pr[0] = (double)(1);
-      pr[1] = (double)(1);
-      mxSetField(mxData,2,"size",mxSize);
-    }
-
-    {
-      const char *typeFields[] = { "base", "fixpt" };
-
-      mxArray *mxType = mxCreateStructMatrix(1,1,2,typeFields);
-      mxSetField(mxType,0,"base",mxCreateDoubleScalar(10));
-      mxSetField(mxType,0,"fixpt",mxCreateDoubleMatrix(0,0,mxREAL));
-      mxSetField(mxData,2,"type",mxType);
-    }
-
-    mxSetField(mxData,2,"complexity",mxCreateDoubleScalar(0));
     mxSetField(mxAutoinheritanceInfo,0,"outputs",mxData);
   }
 
@@ -1546,10 +1492,10 @@ static const mxArray *sf_get_sim_state_info_c3_teste_bloco_atenuacao(void)
 
   mxArray *mxInfo = mxCreateStructMatrix(1, 1, 2, infoFields);
   const char *infoEncStr[] = {
-    "100 S1x4'type','srcId','name','auxInfo'{{M[1],M[32],T\"difer\",},{M[1],M[30],T\"ganho\",},{M[1],M[20],T\"sinal_atenuado\",},{M[8],M[0],T\"is_active_c3_teste_bloco_atenuacao\",}}"
+    "100 S1x3'type','srcId','name','auxInfo'{{M[1],M[33],T\"alfa\",},{M[1],M[20],T\"sinal_absorvido\",},{M[8],M[0],T\"is_active_c3_teste_bloco_atenuacao\",}}"
   };
 
-  mxArray *mxVarInfo = sf_mex_decode_encoded_mx_struct_array(infoEncStr, 4, 10);
+  mxArray *mxVarInfo = sf_mex_decode_encoded_mx_struct_array(infoEncStr, 3, 10);
   mxArray *mxChecksum = mxCreateDoubleMatrix(1, 4, mxREAL);
   sf_c3_teste_bloco_atenuacao_get_check_sum(&mxChecksum);
   mxSetField(mxInfo, 0, infoFields[0], mxChecksum);
@@ -1577,7 +1523,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
            1,
            1,
            0,
-           4,
+           3,
            0,
            0,
            0,
@@ -1601,10 +1547,9 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
             0,
             0,
             0);
-          _SFD_SET_DATA_PROPS(0,1,1,0,"sinal_espalhado");
-          _SFD_SET_DATA_PROPS(1,2,0,1,"sinal_atenuado");
-          _SFD_SET_DATA_PROPS(2,2,0,1,"ganho");
-          _SFD_SET_DATA_PROPS(3,2,0,1,"difer");
+          _SFD_SET_DATA_PROPS(0,2,0,1,"alfa");
+          _SFD_SET_DATA_PROPS(1,1,1,0,"sinal_espalhado");
+          _SFD_SET_DATA_PROPS(2,2,0,1,"sinal_absorvido");
           _SFD_STATE_INFO(0,0,2);
           _SFD_CH_SUBSTATE_COUNT(0);
           _SFD_CH_SUBSTATE_DECOMP(0);
@@ -1620,31 +1565,26 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
         /* Initialization of MATLAB Function Model Coverage */
         _SFD_CV_INIT_EML(0,1,1,0,0,0,0,0,0,0,0);
-        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,2474);
+        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,4117);
         _SFD_SET_DATA_COMPILED_PROPS(0,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
-          (MexFcnForType)c3_sf_marshallOut,(MexInFcnForType)NULL);
+          (MexFcnForType)c3_sf_marshallOut,(MexInFcnForType)c3_sf_marshallIn);
         _SFD_SET_DATA_COMPILED_PROPS(1,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
-          (MexFcnForType)c3_sf_marshallOut,(MexInFcnForType)c3_sf_marshallIn);
+          (MexFcnForType)c3_sf_marshallOut,(MexInFcnForType)NULL);
         _SFD_SET_DATA_COMPILED_PROPS(2,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
-          (MexFcnForType)c3_sf_marshallOut,(MexInFcnForType)c3_sf_marshallIn);
-        _SFD_SET_DATA_COMPILED_PROPS(3,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
           (MexFcnForType)c3_sf_marshallOut,(MexInFcnForType)c3_sf_marshallIn);
 
         {
+          real_T *c3_alfa;
           real_T *c3_sinal_espalhado;
-          real_T *c3_sinal_atenuado;
-          real_T *c3_ganho;
-          real_T *c3_difer;
-          c3_difer = (real_T *)ssGetOutputPortSignal(chartInstance->S, 3);
-          c3_ganho = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
-          c3_sinal_atenuado = (real_T *)ssGetOutputPortSignal(chartInstance->S,
-            1);
+          real_T *c3_sinal_absorvido;
+          c3_sinal_absorvido = (real_T *)ssGetOutputPortSignal(chartInstance->S,
+            2);
           c3_sinal_espalhado = (real_T *)ssGetInputPortSignal(chartInstance->S,
             0);
-          _SFD_SET_DATA_VALUE_PTR(0U, c3_sinal_espalhado);
-          _SFD_SET_DATA_VALUE_PTR(1U, c3_sinal_atenuado);
-          _SFD_SET_DATA_VALUE_PTR(2U, c3_ganho);
-          _SFD_SET_DATA_VALUE_PTR(3U, c3_difer);
+          c3_alfa = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
+          _SFD_SET_DATA_VALUE_PTR(0U, c3_alfa);
+          _SFD_SET_DATA_VALUE_PTR(1U, c3_sinal_espalhado);
+          _SFD_SET_DATA_VALUE_PTR(2U, c3_sinal_absorvido);
         }
       }
     } else {
@@ -1657,7 +1597,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
 static const char* sf_get_instance_specialization(void)
 {
-  return "A52oP1apb3pFEcPtlX4hCB";
+  return "dLpdspNzV1VuJVWQLaLt3B";
 }
 
 static void sf_opaque_initialize_c3_teste_bloco_atenuacao(void *chartInstanceVar)
@@ -1818,12 +1758,12 @@ static void mdlSetWorkWidths_c3_teste_bloco_atenuacao(SimStruct *S)
       sf_mark_chart_expressionable_inputs(S,sf_get_instance_specialization(),
         infoStruct,3,1);
       sf_mark_chart_reusable_outputs(S,sf_get_instance_specialization(),
-        infoStruct,3,3);
+        infoStruct,3,2);
     }
 
     {
       unsigned int outPortIdx;
-      for (outPortIdx=1; outPortIdx<=3; ++outPortIdx) {
+      for (outPortIdx=1; outPortIdx<=2; ++outPortIdx) {
         ssSetOutputPortOptimizeInIR(S, outPortIdx, 1U);
       }
     }
@@ -1841,10 +1781,10 @@ static void mdlSetWorkWidths_c3_teste_bloco_atenuacao(SimStruct *S)
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(1971825743U));
-  ssSetChecksum1(S,(936309295U));
-  ssSetChecksum2(S,(1108759379U));
-  ssSetChecksum3(S,(2788003052U));
+  ssSetChecksum0(S,(2115375697U));
+  ssSetChecksum1(S,(2525430865U));
+  ssSetChecksum2(S,(3815273587U));
+  ssSetChecksum3(S,(3470913893U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
   ssSupportsMultipleExecInstances(S,1);

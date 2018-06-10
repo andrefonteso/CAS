@@ -2,6 +2,7 @@
 
 #include "teste_bloco_atenuacao_sfun.h"
 #include "teste_bloco_atenuacao_sfun_debug_macros.h"
+#include "c2_teste_bloco_atenuacao.h"
 #include "c3_teste_bloco_atenuacao.h"
 #include "c4_teste_bloco_atenuacao.h"
 
@@ -29,6 +30,11 @@ void teste_bloco_atenuacao_terminator(void)
 unsigned int sf_teste_bloco_atenuacao_method_dispatcher(SimStruct *simstructPtr,
   unsigned int chartFileNumber, const char* specsCksum, int_T method, void *data)
 {
+  if (chartFileNumber==2) {
+    c2_teste_bloco_atenuacao_method_dispatcher(simstructPtr, method, data);
+    return 1;
+  }
+
   if (chartFileNumber==3) {
     c3_teste_bloco_atenuacao_method_dispatcher(simstructPtr, method, data);
     return 1;
@@ -72,14 +78,21 @@ unsigned int sf_teste_bloco_atenuacao_process_check_sum_call( int nlhs, mxArray 
       ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(0U);
       ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(0U);
     } else if (!strcmp(commandName,"makefile")) {
-      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1085391686U);
-      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(378762614U);
-      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2768243502U);
-      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2250994937U);
+      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3761284522U);
+      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(1436923484U);
+      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(3080763823U);
+      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(3984045439U);
     } else if (nrhs==3 && !strcmp(commandName,"chart")) {
       unsigned int chartFileNumber;
       chartFileNumber = (unsigned int)mxGetScalar(prhs[2]);
       switch (chartFileNumber) {
+       case 2:
+        {
+          extern void sf_c2_teste_bloco_atenuacao_get_check_sum(mxArray *plhs[]);
+          sf_c2_teste_bloco_atenuacao_get_check_sum(plhs);
+          break;
+        }
+
        case 3:
         {
           extern void sf_c3_teste_bloco_atenuacao_get_check_sum(mxArray *plhs[]);
@@ -109,10 +122,10 @@ unsigned int sf_teste_bloco_atenuacao_process_check_sum_call( int nlhs, mxArray 
       return 0;
     }
   } else {
-    ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1492693037U);
-    ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2040907590U);
-    ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2940118423U);
-    ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2365042422U);
+    ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(2580113361U);
+    ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2285246237U);
+    ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2304379217U);
+    ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(3732110823U);
   }
 
   return 1;
@@ -148,9 +161,22 @@ unsigned int sf_teste_bloco_atenuacao_autoinheritance_info( int nlhs, mxArray *
     unsigned int chartFileNumber;
     chartFileNumber = (unsigned int)mxGetScalar(prhs[1]);
     switch (chartFileNumber) {
+     case 2:
+      {
+        if (strcmp(aiChksum, "xBVhZaGPFq3j7J6XVBKhQE") == 0) {
+          extern mxArray *sf_c2_teste_bloco_atenuacao_get_autoinheritance_info
+            (void);
+          plhs[0] = sf_c2_teste_bloco_atenuacao_get_autoinheritance_info();
+          break;
+        }
+
+        plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
+        break;
+      }
+
      case 3:
       {
-        if (strcmp(aiChksum, "kZRDblhnbbeFvshzsBcSfH") == 0) {
+        if (strcmp(aiChksum, "8ZaiuP98caeuSGxxeIJvvE") == 0) {
           extern mxArray *sf_c3_teste_bloco_atenuacao_get_autoinheritance_info
             (void);
           plhs[0] = sf_c3_teste_bloco_atenuacao_get_autoinheritance_info();
@@ -163,7 +189,7 @@ unsigned int sf_teste_bloco_atenuacao_autoinheritance_info( int nlhs, mxArray *
 
      case 4:
       {
-        if (strcmp(aiChksum, "d5mEdrgm2bCI5eKCzTmtUB") == 0) {
+        if (strcmp(aiChksum, "snmSuYmK3nUjMQVQKPr8zE") == 0) {
           extern mxArray *sf_c4_teste_bloco_atenuacao_get_autoinheritance_info
             (void);
           plhs[0] = sf_c4_teste_bloco_atenuacao_get_autoinheritance_info();
@@ -209,6 +235,17 @@ unsigned int sf_teste_bloco_atenuacao_get_eml_resolved_functions_info( int nlhs,
     unsigned int chartFileNumber;
     chartFileNumber = (unsigned int)mxGetScalar(prhs[1]);
     switch (chartFileNumber) {
+     case 2:
+      {
+        extern const mxArray
+          *sf_c2_teste_bloco_atenuacao_get_eml_resolved_functions_info(void);
+        mxArray *persistentMxArray = (mxArray *)
+          sf_c2_teste_bloco_atenuacao_get_eml_resolved_functions_info();
+        plhs[0] = mxDuplicateArray(persistentMxArray);
+        mxDestroyArray(persistentMxArray);
+        break;
+      }
+
      case 3:
       {
         extern const mxArray
@@ -266,9 +303,18 @@ unsigned int sf_teste_bloco_atenuacao_third_party_uses_info( int nlhs, mxArray *
     unsigned int chartFileNumber;
     chartFileNumber = (unsigned int)mxGetScalar(prhs[1]);
     switch (chartFileNumber) {
+     case 2:
+      {
+        if (strcmp(tpChksum, "kBNEaB0GbyXhc4KS6DdOe") == 0) {
+          extern mxArray *sf_c2_teste_bloco_atenuacao_third_party_uses_info(void);
+          plhs[0] = sf_c2_teste_bloco_atenuacao_third_party_uses_info();
+          break;
+        }
+      }
+
      case 3:
       {
-        if (strcmp(tpChksum, "A52oP1apb3pFEcPtlX4hCB") == 0) {
+        if (strcmp(tpChksum, "dLpdspNzV1VuJVWQLaLt3B") == 0) {
           extern mxArray *sf_c3_teste_bloco_atenuacao_third_party_uses_info(void);
           plhs[0] = sf_c3_teste_bloco_atenuacao_third_party_uses_info();
           break;
@@ -277,7 +323,7 @@ unsigned int sf_teste_bloco_atenuacao_third_party_uses_info( int nlhs, mxArray *
 
      case 4:
       {
-        if (strcmp(tpChksum, "3trwPRpdoSC9NaLN3WMIRG") == 0) {
+        if (strcmp(tpChksum, "EIT5dKkeFhFU1D9u6TfluD") == 0) {
           extern mxArray *sf_c4_teste_bloco_atenuacao_third_party_uses_info(void);
           plhs[0] = sf_c4_teste_bloco_atenuacao_third_party_uses_info();
           break;
@@ -312,9 +358,19 @@ unsigned int sf_teste_bloco_atenuacao_updateBuildInfo_args_info( int nlhs,
     unsigned int chartFileNumber;
     chartFileNumber = (unsigned int)mxGetScalar(prhs[1]);
     switch (chartFileNumber) {
+     case 2:
+      {
+        if (strcmp(tpChksum, "kBNEaB0GbyXhc4KS6DdOe") == 0) {
+          extern mxArray *sf_c2_teste_bloco_atenuacao_updateBuildInfo_args_info
+            (void);
+          plhs[0] = sf_c2_teste_bloco_atenuacao_updateBuildInfo_args_info();
+          break;
+        }
+      }
+
      case 3:
       {
-        if (strcmp(tpChksum, "A52oP1apb3pFEcPtlX4hCB") == 0) {
+        if (strcmp(tpChksum, "dLpdspNzV1VuJVWQLaLt3B") == 0) {
           extern mxArray *sf_c3_teste_bloco_atenuacao_updateBuildInfo_args_info
             (void);
           plhs[0] = sf_c3_teste_bloco_atenuacao_updateBuildInfo_args_info();
@@ -324,7 +380,7 @@ unsigned int sf_teste_bloco_atenuacao_updateBuildInfo_args_info( int nlhs,
 
      case 4:
       {
-        if (strcmp(tpChksum, "3trwPRpdoSC9NaLN3WMIRG") == 0) {
+        if (strcmp(tpChksum, "EIT5dKkeFhFU1D9u6TfluD") == 0) {
           extern mxArray *sf_c4_teste_bloco_atenuacao_updateBuildInfo_args_info
             (void);
           plhs[0] = sf_c4_teste_bloco_atenuacao_updateBuildInfo_args_info();
@@ -344,7 +400,7 @@ void teste_bloco_atenuacao_debug_initialize(struct SfDebugInstanceStruct*
   debugInstance)
 {
   _teste_bloco_atenuacaoMachineNumber_ = sf_debug_initialize_machine
-    (debugInstance,"teste_bloco_atenuacao","sfun",0,2,0,0,0);
+    (debugInstance,"teste_bloco_atenuacao","sfun",0,3,0,0,0);
   sf_debug_set_machine_event_thresholds(debugInstance,
     _teste_bloco_atenuacaoMachineNumber_,0,0);
   sf_debug_set_machine_data_thresholds(debugInstance,

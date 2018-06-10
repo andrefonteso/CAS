@@ -19,9 +19,8 @@
 
 /* Variable Definitions */
 static real_T _sfTime_;
-static const char * c4_debug_family_names[8] = { "caminho", "espalhamento",
-  "nargin", "nargout", "k", "sinal_atrasado", "sinal_espalhado",
-  "ganho_espalhamento" };
+static const char * c4_debug_family_names[7] = { "caminho", "perda_espalhamento",
+  "nargin", "nargout", "k", "sinal_atrasado", "sinal_espalhado" };
 
 /* Function Declarations */
 static void initialize_c4_teste_bloco_atenuacao
@@ -48,8 +47,7 @@ static void init_script_number_translation(uint32_T c4_machineNumber, uint32_T
   c4_chartNumber, uint32_T c4_instanceNumber);
 static const mxArray *c4_sf_marshallOut(void *chartInstanceVoid, void *c4_inData);
 static real_T c4_emlrt_marshallIn(SFc4_teste_bloco_atenuacaoInstanceStruct
-  *chartInstance, const mxArray *c4_ganho_espalhamento, const char_T
-  *c4_identifier);
+  *chartInstance, const mxArray *c4_sinal_espalhado, const char_T *c4_identifier);
 static real_T c4_b_emlrt_marshallIn(SFc4_teste_bloco_atenuacaoInstanceStruct
   *chartInstance, const mxArray *c4_u, const emlrtMsgIdentifier *c4_parentId);
 static void c4_sf_marshallIn(void *chartInstanceVoid, const mxArray
@@ -114,35 +112,25 @@ static const mxArray *get_sim_state_c4_teste_bloco_atenuacao
   real_T c4_hoistedGlobal;
   real_T c4_u;
   const mxArray *c4_b_y = NULL;
-  real_T c4_b_hoistedGlobal;
-  real_T c4_b_u;
+  uint8_T c4_b_hoistedGlobal;
+  uint8_T c4_b_u;
   const mxArray *c4_c_y = NULL;
-  uint8_T c4_c_hoistedGlobal;
-  uint8_T c4_c_u;
-  const mxArray *c4_d_y = NULL;
-  real_T *c4_ganho_espalhamento;
   real_T *c4_sinal_espalhado;
-  c4_ganho_espalhamento = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
   c4_sinal_espalhado = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   c4_st = NULL;
   c4_st = NULL;
   c4_y = NULL;
-  sf_mex_assign(&c4_y, sf_mex_createcellmatrix(3, 1), false);
-  c4_hoistedGlobal = *c4_ganho_espalhamento;
+  sf_mex_assign(&c4_y, sf_mex_createcellmatrix(2, 1), false);
+  c4_hoistedGlobal = *c4_sinal_espalhado;
   c4_u = c4_hoistedGlobal;
   c4_b_y = NULL;
   sf_mex_assign(&c4_b_y, sf_mex_create("y", &c4_u, 0, 0U, 0U, 0U, 0), false);
   sf_mex_setcell(c4_y, 0, c4_b_y);
-  c4_b_hoistedGlobal = *c4_sinal_espalhado;
+  c4_b_hoistedGlobal = chartInstance->c4_is_active_c4_teste_bloco_atenuacao;
   c4_b_u = c4_b_hoistedGlobal;
   c4_c_y = NULL;
-  sf_mex_assign(&c4_c_y, sf_mex_create("y", &c4_b_u, 0, 0U, 0U, 0U, 0), false);
+  sf_mex_assign(&c4_c_y, sf_mex_create("y", &c4_b_u, 3, 0U, 0U, 0U, 0), false);
   sf_mex_setcell(c4_y, 1, c4_c_y);
-  c4_c_hoistedGlobal = chartInstance->c4_is_active_c4_teste_bloco_atenuacao;
-  c4_c_u = c4_c_hoistedGlobal;
-  c4_d_y = NULL;
-  sf_mex_assign(&c4_d_y, sf_mex_create("y", &c4_c_u, 3, 0U, 0U, 0U, 0), false);
-  sf_mex_setcell(c4_y, 2, c4_d_y);
   sf_mex_assign(&c4_st, c4_y, false);
   return c4_st;
 }
@@ -151,18 +139,14 @@ static void set_sim_state_c4_teste_bloco_atenuacao
   (SFc4_teste_bloco_atenuacaoInstanceStruct *chartInstance, const mxArray *c4_st)
 {
   const mxArray *c4_u;
-  real_T *c4_ganho_espalhamento;
   real_T *c4_sinal_espalhado;
-  c4_ganho_espalhamento = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
   c4_sinal_espalhado = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   chartInstance->c4_doneDoubleBufferReInit = true;
   c4_u = sf_mex_dup(c4_st);
-  *c4_ganho_espalhamento = c4_emlrt_marshallIn(chartInstance, sf_mex_dup
-    (sf_mex_getcell(c4_u, 0)), "ganho_espalhamento");
   *c4_sinal_espalhado = c4_emlrt_marshallIn(chartInstance, sf_mex_dup
-    (sf_mex_getcell(c4_u, 1)), "sinal_espalhado");
+    (sf_mex_getcell(c4_u, 0)), "sinal_espalhado");
   chartInstance->c4_is_active_c4_teste_bloco_atenuacao = c4_d_emlrt_marshallIn
-    (chartInstance, sf_mex_dup(sf_mex_getcell(c4_u, 2)),
+    (chartInstance, sf_mex_dup(sf_mex_getcell(c4_u, 1)),
      "is_active_c4_teste_bloco_atenuacao");
   sf_mex_destroy(&c4_u);
   c4_update_debugger_state_c4_teste_bloco_atenuacao(chartInstance);
@@ -182,18 +166,19 @@ static void sf_gateway_c4_teste_bloco_atenuacao
   real_T c4_b_hoistedGlobal;
   real_T c4_k;
   real_T c4_sinal_atrasado;
-  uint32_T c4_debug_family_var_map[8];
+  uint32_T c4_debug_family_var_map[7];
   real_T c4_caminho;
-  real_T c4_espalhamento;
+  real_T c4_perda_espalhamento;
   real_T c4_nargin = 2.0;
-  real_T c4_nargout = 2.0;
+  real_T c4_nargout = 1.0;
   real_T c4_sinal_espalhado;
-  real_T c4_ganho_espalhamento;
+  real_T c4_u;
+  const mxArray *c4_y = NULL;
   real_T c4_A;
   real_T c4_x;
   real_T c4_b_x;
   real_T c4_c_x;
-  real_T c4_y;
+  real_T c4_b_y;
   real_T c4_b;
   real_T c4_b_b;
   real_T c4_c_b;
@@ -201,30 +186,28 @@ static void sf_gateway_c4_teste_bloco_atenuacao
   real_T c4_d_b;
   real_T c4_br;
   real_T c4_c;
-  real_T *c4_b_ganho_espalhamento;
-  real_T *c4_b_sinal_espalhado;
   real_T *c4_b_sinal_atrasado;
   real_T *c4_b_k;
-  c4_b_ganho_espalhamento = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
+  real_T *c4_b_sinal_espalhado;
   c4_b_sinal_espalhado = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   c4_b_sinal_atrasado = (real_T *)ssGetInputPortSignal(chartInstance->S, 1);
   c4_b_k = (real_T *)ssGetInputPortSignal(chartInstance->S, 0);
   _SFD_SYMBOL_SCOPE_PUSH(0U, 0U);
   _sfTime_ = sf_get_time(chartInstance->S);
-  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 1U, chartInstance->c4_sfEvent);
+  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 2U, chartInstance->c4_sfEvent);
   _SFD_DATA_RANGE_CHECK(*c4_b_k, 0U);
   _SFD_DATA_RANGE_CHECK(*c4_b_sinal_atrasado, 1U);
   chartInstance->c4_sfEvent = CALL_EVENT;
-  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 1U, chartInstance->c4_sfEvent);
+  _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 2U, chartInstance->c4_sfEvent);
   c4_hoistedGlobal = *c4_b_k;
   c4_b_hoistedGlobal = *c4_b_sinal_atrasado;
   c4_k = c4_hoistedGlobal;
   c4_sinal_atrasado = c4_b_hoistedGlobal;
-  _SFD_SYMBOL_SCOPE_PUSH_EML(0U, 8U, 8U, c4_debug_family_names,
+  _SFD_SYMBOL_SCOPE_PUSH_EML(0U, 7U, 7U, c4_debug_family_names,
     c4_debug_family_var_map);
   _SFD_SYMBOL_SCOPE_ADD_EML(&c4_caminho, 0U, c4_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_espalhamento, 1U, c4_sf_marshallOut,
-    c4_sf_marshallIn);
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_perda_espalhamento, 1U,
+    c4_sf_marshallOut, c4_sf_marshallIn);
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_nargin, 2U, c4_sf_marshallOut,
     c4_sf_marshallIn);
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_nargout, 3U, c4_sf_marshallOut,
@@ -233,20 +216,23 @@ static void sf_gateway_c4_teste_bloco_atenuacao
   _SFD_SYMBOL_SCOPE_ADD_EML(&c4_sinal_atrasado, 5U, c4_sf_marshallOut);
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_sinal_espalhado, 6U,
     c4_sf_marshallOut, c4_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_ganho_espalhamento, 7U,
-    c4_sf_marshallOut, c4_sf_marshallIn);
   CV_EML_FCN(0, 0);
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 7);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 8);
   c4_caminho = 6.0;
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 11);
-  c4_espalhamento = -c4_k * 10.0 * 0.77815125038364363;
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 18);
-  c4_A = c4_espalhamento;
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 12);
+  c4_perda_espalhamento = c4_k * 10.0 * 0.77815125038364363;
+  sf_mex_printf("%s =\\n", "perda_espalhamento");
+  c4_u = c4_perda_espalhamento;
+  c4_y = NULL;
+  sf_mex_assign(&c4_y, sf_mex_create("y", &c4_u, 0, 0U, 0U, 0U, 0), false);
+  sf_mex_call_debug(sfGlobalDebugInstanceStruct, "disp", 0U, 1U, 14, c4_y);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 19);
+  c4_A = -c4_perda_espalhamento;
   c4_x = c4_A;
   c4_b_x = c4_x;
   c4_c_x = c4_b_x;
-  c4_y = c4_c_x / 10.0;
-  c4_b = c4_y;
+  c4_b_y = c4_c_x / 10.0;
+  c4_b = c4_b_y;
   c4_b_b = c4_b;
   c4_c_b = c4_b_b;
   c4_eml_scalar_eg(chartInstance);
@@ -256,18 +242,14 @@ static void sf_gateway_c4_teste_bloco_atenuacao
   c4_br = c4_d_b;
   c4_c = muDoubleScalarPower(10.0, c4_br);
   c4_sinal_espalhado = c4_sinal_atrasado * c4_c;
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 24);
-  c4_ganho_espalhamento = c4_sinal_espalhado - c4_sinal_atrasado;
-  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, -24);
+  _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, -19);
   _SFD_SYMBOL_SCOPE_POP();
   *c4_b_sinal_espalhado = c4_sinal_espalhado;
-  *c4_b_ganho_espalhamento = c4_ganho_espalhamento;
-  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 1U, chartInstance->c4_sfEvent);
+  _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 2U, chartInstance->c4_sfEvent);
   _SFD_SYMBOL_SCOPE_POP();
   _SFD_CHECK_FOR_STATE_INCONSISTENCY(_teste_bloco_atenuacaoMachineNumber_,
     chartInstance->chartNumber, chartInstance->instanceNumber);
   _SFD_DATA_RANGE_CHECK(*c4_b_sinal_espalhado, 2U);
-  _SFD_DATA_RANGE_CHECK(*c4_b_ganho_espalhamento, 3U);
 }
 
 static void initSimStructsc4_teste_bloco_atenuacao
@@ -300,16 +282,15 @@ static const mxArray *c4_sf_marshallOut(void *chartInstanceVoid, void *c4_inData
 }
 
 static real_T c4_emlrt_marshallIn(SFc4_teste_bloco_atenuacaoInstanceStruct
-  *chartInstance, const mxArray *c4_ganho_espalhamento, const char_T
-  *c4_identifier)
+  *chartInstance, const mxArray *c4_sinal_espalhado, const char_T *c4_identifier)
 {
   real_T c4_y;
   emlrtMsgIdentifier c4_thisId;
   c4_thisId.fIdentifier = c4_identifier;
   c4_thisId.fParent = NULL;
-  c4_y = c4_b_emlrt_marshallIn(chartInstance, sf_mex_dup(c4_ganho_espalhamento),
+  c4_y = c4_b_emlrt_marshallIn(chartInstance, sf_mex_dup(c4_sinal_espalhado),
     &c4_thisId);
-  sf_mex_destroy(&c4_ganho_espalhamento);
+  sf_mex_destroy(&c4_sinal_espalhado);
   return c4_y;
 }
 
@@ -328,19 +309,19 @@ static real_T c4_b_emlrt_marshallIn(SFc4_teste_bloco_atenuacaoInstanceStruct
 static void c4_sf_marshallIn(void *chartInstanceVoid, const mxArray
   *c4_mxArrayInData, const char_T *c4_varName, void *c4_outData)
 {
-  const mxArray *c4_ganho_espalhamento;
+  const mxArray *c4_sinal_espalhado;
   const char_T *c4_identifier;
   emlrtMsgIdentifier c4_thisId;
   real_T c4_y;
   SFc4_teste_bloco_atenuacaoInstanceStruct *chartInstance;
   chartInstance = (SFc4_teste_bloco_atenuacaoInstanceStruct *)chartInstanceVoid;
-  c4_ganho_espalhamento = sf_mex_dup(c4_mxArrayInData);
+  c4_sinal_espalhado = sf_mex_dup(c4_mxArrayInData);
   c4_identifier = c4_varName;
   c4_thisId.fIdentifier = c4_identifier;
   c4_thisId.fParent = NULL;
-  c4_y = c4_b_emlrt_marshallIn(chartInstance, sf_mex_dup(c4_ganho_espalhamento),
+  c4_y = c4_b_emlrt_marshallIn(chartInstance, sf_mex_dup(c4_sinal_espalhado),
     &c4_thisId);
-  sf_mex_destroy(&c4_ganho_espalhamento);
+  sf_mex_destroy(&c4_sinal_espalhado);
   *(real_T *)c4_outData = c4_y;
   sf_mex_destroy(&c4_mxArrayInData);
 }
@@ -1233,10 +1214,10 @@ extern void utFree(void*);
 
 void sf_c4_teste_bloco_atenuacao_get_check_sum(mxArray *plhs[])
 {
-  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1012736021U);
-  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2333671564U);
-  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(1810032110U);
-  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(527773945U);
+  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(2742129709U);
+  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(745947306U);
+  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(1211608252U);
+  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(3446001367U);
 }
 
 mxArray *sf_c4_teste_bloco_atenuacao_get_autoinheritance_info(void)
@@ -1248,7 +1229,7 @@ mxArray *sf_c4_teste_bloco_atenuacao_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("d5mEdrgm2bCI5eKCzTmtUB");
+    mxArray *mxChecksum = mxCreateString("snmSuYmK3nUjMQVQKPr8zE");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -1305,7 +1286,7 @@ mxArray *sf_c4_teste_bloco_atenuacao_get_autoinheritance_info(void)
   {
     const char *dataFields[] = { "size", "type", "complexity" };
 
-    mxArray *mxData = mxCreateStructMatrix(1,2,3,dataFields);
+    mxArray *mxData = mxCreateStructMatrix(1,1,3,dataFields);
 
     {
       mxArray *mxSize = mxCreateDoubleMatrix(1,2,mxREAL);
@@ -1325,25 +1306,6 @@ mxArray *sf_c4_teste_bloco_atenuacao_get_autoinheritance_info(void)
     }
 
     mxSetField(mxData,0,"complexity",mxCreateDoubleScalar(0));
-
-    {
-      mxArray *mxSize = mxCreateDoubleMatrix(1,2,mxREAL);
-      double *pr = mxGetPr(mxSize);
-      pr[0] = (double)(1);
-      pr[1] = (double)(1);
-      mxSetField(mxData,1,"size",mxSize);
-    }
-
-    {
-      const char *typeFields[] = { "base", "fixpt" };
-
-      mxArray *mxType = mxCreateStructMatrix(1,1,2,typeFields);
-      mxSetField(mxType,0,"base",mxCreateDoubleScalar(10));
-      mxSetField(mxType,0,"fixpt",mxCreateDoubleMatrix(0,0,mxREAL));
-      mxSetField(mxData,1,"type",mxType);
-    }
-
-    mxSetField(mxData,1,"complexity",mxCreateDoubleScalar(0));
     mxSetField(mxAutoinheritanceInfo,0,"outputs",mxData);
   }
 
@@ -1372,10 +1334,10 @@ static const mxArray *sf_get_sim_state_info_c4_teste_bloco_atenuacao(void)
 
   mxArray *mxInfo = mxCreateStructMatrix(1, 1, 2, infoFields);
   const char *infoEncStr[] = {
-    "100 S1x3'type','srcId','name','auxInfo'{{M[1],M[20],T\"ganho_espalhamento\",},{M[1],M[5],T\"sinal_espalhado\",},{M[8],M[0],T\"is_active_c4_teste_bloco_atenuacao\",}}"
+    "100 S1x2'type','srcId','name','auxInfo'{{M[1],M[5],T\"sinal_espalhado\",},{M[8],M[0],T\"is_active_c4_teste_bloco_atenuacao\",}}"
   };
 
-  mxArray *mxVarInfo = sf_mex_decode_encoded_mx_struct_array(infoEncStr, 3, 10);
+  mxArray *mxVarInfo = sf_mex_decode_encoded_mx_struct_array(infoEncStr, 2, 10);
   mxArray *mxChecksum = mxCreateDoubleMatrix(1, 4, mxREAL);
   sf_c4_teste_bloco_atenuacao_get_check_sum(&mxChecksum);
   mxSetField(mxInfo, 0, infoFields[0], mxChecksum);
@@ -1403,7 +1365,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
            1,
            1,
            0,
-           4,
+           3,
            0,
            0,
            0,
@@ -1430,7 +1392,6 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
           _SFD_SET_DATA_PROPS(0,1,1,0,"k");
           _SFD_SET_DATA_PROPS(1,1,1,0,"sinal_atrasado");
           _SFD_SET_DATA_PROPS(2,2,0,1,"sinal_espalhado");
-          _SFD_SET_DATA_PROPS(3,2,0,1,"ganho_espalhamento");
           _SFD_STATE_INFO(0,0,2);
           _SFD_CH_SUBSTATE_COUNT(0);
           _SFD_CH_SUBSTATE_DECOMP(0);
@@ -1446,23 +1407,18 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
         /* Initialization of MATLAB Function Model Coverage */
         _SFD_CV_INIT_EML(0,1,1,0,0,0,0,0,0,0,0);
-        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,1387);
+        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,943);
         _SFD_SET_DATA_COMPILED_PROPS(0,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
           (MexFcnForType)c4_sf_marshallOut,(MexInFcnForType)NULL);
         _SFD_SET_DATA_COMPILED_PROPS(1,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
           (MexFcnForType)c4_sf_marshallOut,(MexInFcnForType)NULL);
         _SFD_SET_DATA_COMPILED_PROPS(2,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
           (MexFcnForType)c4_sf_marshallOut,(MexInFcnForType)c4_sf_marshallIn);
-        _SFD_SET_DATA_COMPILED_PROPS(3,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
-          (MexFcnForType)c4_sf_marshallOut,(MexInFcnForType)c4_sf_marshallIn);
 
         {
           real_T *c4_k;
           real_T *c4_sinal_atrasado;
           real_T *c4_sinal_espalhado;
-          real_T *c4_ganho_espalhamento;
-          c4_ganho_espalhamento = (real_T *)ssGetOutputPortSignal
-            (chartInstance->S, 2);
           c4_sinal_espalhado = (real_T *)ssGetOutputPortSignal(chartInstance->S,
             1);
           c4_sinal_atrasado = (real_T *)ssGetInputPortSignal(chartInstance->S, 1);
@@ -1470,7 +1426,6 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
           _SFD_SET_DATA_VALUE_PTR(0U, c4_k);
           _SFD_SET_DATA_VALUE_PTR(1U, c4_sinal_atrasado);
           _SFD_SET_DATA_VALUE_PTR(2U, c4_sinal_espalhado);
-          _SFD_SET_DATA_VALUE_PTR(3U, c4_ganho_espalhamento);
         }
       }
     } else {
@@ -1483,7 +1438,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
 static const char* sf_get_instance_specialization(void)
 {
-  return "3trwPRpdoSC9NaLN3WMIRG";
+  return "EIT5dKkeFhFU1D9u6TfluD";
 }
 
 static void sf_opaque_initialize_c4_teste_bloco_atenuacao(void *chartInstanceVar)
@@ -1645,12 +1600,12 @@ static void mdlSetWorkWidths_c4_teste_bloco_atenuacao(SimStruct *S)
       sf_mark_chart_expressionable_inputs(S,sf_get_instance_specialization(),
         infoStruct,4,2);
       sf_mark_chart_reusable_outputs(S,sf_get_instance_specialization(),
-        infoStruct,4,2);
+        infoStruct,4,1);
     }
 
     {
       unsigned int outPortIdx;
-      for (outPortIdx=1; outPortIdx<=2; ++outPortIdx) {
+      for (outPortIdx=1; outPortIdx<=1; ++outPortIdx) {
         ssSetOutputPortOptimizeInIR(S, outPortIdx, 1U);
       }
     }
@@ -1668,10 +1623,10 @@ static void mdlSetWorkWidths_c4_teste_bloco_atenuacao(SimStruct *S)
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(3416694207U));
-  ssSetChecksum1(S,(3901238697U));
-  ssSetChecksum2(S,(363842342U));
-  ssSetChecksum3(S,(1190752002U));
+  ssSetChecksum0(S,(1306776713U));
+  ssSetChecksum1(S,(1506596614U));
+  ssSetChecksum2(S,(2993942019U));
+  ssSetChecksum3(S,(2060893800U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
   ssSupportsMultipleExecInstances(S,1);

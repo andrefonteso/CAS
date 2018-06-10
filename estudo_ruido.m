@@ -2,19 +2,19 @@
 % Esse estudo realiza uma análise das equações existentes na literatura
 % que descrevem os tipos de ruidos existentes no ambiente subaquático. 
 % São eles, o ruído de turbulências, o ruido de navegações, o ruído das 
-% ondas e o ruído térmico. Para representar o ruído total desse ambiente é 
-% somado todos estes ruídos.
+% ondas e o ruído térmico. Para representar o ruído total desse ambiente são 
+% somados todos estes ruídos.
 
 clear all;
 close all;
 clc;
 
 % f - signal frequency (kHz); 
-f = 10:.5:20;
+f = 10000:1000:20000;
 % s - shipping factor (between 0 - 1);
 s = 0;
 % w - wind speed (m/s); 
-w = 20;
+w = 15;
 
 %Ruido de Turbulências
 Nt = (10.^((17-30*log10(f))/10));

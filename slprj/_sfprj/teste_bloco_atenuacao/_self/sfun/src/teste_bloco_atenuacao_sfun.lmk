@@ -7,6 +7,7 @@ LIBFLAGS =
 
 OBJECTS = \
 	"teste_bloco_atenuacao_sfun.obj"\
+	"c2_teste_bloco_atenuacao.obj"\
 	"c3_teste_bloco_atenuacao.obj"\
 	"c4_teste_bloco_atenuacao.obj"\
 	"teste_bloco_atenuacao_sfun_registry.obj"\
@@ -31,6 +32,8 @@ teste_bloco_atenuacao_sfun.mexw64 : $(MAKEFILE) $(OBJECTS)
 	$(LD) $(LDFLAGS) -o teste_bloco_atenuacao_sfun.mexw64 @teste_bloco_atenuacao_sfun.lmko
 teste_bloco_atenuacao_sfun.obj :	"teste_bloco_atenuacao_sfun.c"
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) "teste_bloco_atenuacao_sfun.c"
+c2_teste_bloco_atenuacao.obj :	"c2_teste_bloco_atenuacao.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c2_teste_bloco_atenuacao.c"
 c3_teste_bloco_atenuacao.obj :	"c3_teste_bloco_atenuacao.c"
 	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c3_teste_bloco_atenuacao.c"
 c4_teste_bloco_atenuacao.obj :	"c4_teste_bloco_atenuacao.c"
