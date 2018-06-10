@@ -1,10 +1,20 @@
-%% Estudo da Análise dos Ruídos Ambientais
+%% Escrito por André Fontes de Oliveira em 2018 
+% Códigos de simulação do MatLab/Simulink de blocos do Simulink para 
+% Dissertação de Mestrado.
+% "MODELO DE SIMULAÇÃO PARA UM CANAL DE COMUNICAÇÃO ACÚSTICO SUBAQUÁTICO
+% COM TRANSDUTORES PIEZOELÉTRICOS"
+% Mestrado em Engenharia de Telecomunicações
+% Programa de Pós-Graduação em Engenharia de Telecomunicações - PPGET
+% Instituto Federal de Educação Ciência e Tecnologia do Ceará - IFCE
+% Orientação do Prof. Dr. Francisco José Alves de Aquino 
+%--------------------------------------------------------------------------
+% Estudo da Análise dos Ruídos Ambientais
 % Esse estudo realiza uma análise das equações existentes na literatura
 % que descrevem os tipos de ruidos existentes no ambiente subaquático. 
 % São eles, o ruído de turbulências, o ruido de navegações, o ruído das 
 % ondas e o ruído térmico. Para representar o ruído total desse ambiente são 
 % somados todos estes ruídos.
-
+%%
 clear all;
 close all;
 clc;
@@ -39,5 +49,3 @@ subplot(2,4,2); stem(f,Ns);
 subplot(2,4,3); stem(f,Nw);
 subplot(2,4,4); stem(f,Nth);
 subplot(2,4,5); stem(f,ruido_total);
-
-%sinal_ruidoso = awgn(sinal,ruido_total);
